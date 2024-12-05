@@ -1,0 +1,50 @@
+#map {
+  height: 70vh;
+  width: 70%;
+  position: relative;
+  top: 5vh;
+  left: 15%;
+}
+
+#search-box {
+  position: absolute;
+  top: 150px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 300px;
+  border-radius: 5px;
+  display: block; /* Initially visible */
+}
+
+#recenter-btn {
+    position: absolute;
+    top: 140px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    bottom: 200px;
+  }
+
+
+#recenter-btn:hover {
+    background-color: #0056b3;
+    
+  }
+
+.popup{
+    background-color: lightgreen;
+
+}

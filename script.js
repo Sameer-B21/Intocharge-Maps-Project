@@ -1,33 +1,125 @@
 let map;
+let autocomplete;
+let markers = [];  // Array to hold the markers
+let userLocation; // Store the user's location
 
 function initMap() {
-  // Define the starting coordinates (latitude and longitude)
-  const startLocation = { lat: 43.65107, lng: -79.347015 }; // Toronto, Canada
+  // Get the user's current position
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
 
-  // Initialize the map
-  map = new google.maps.Map(document.getElementById("map"), {
-    center: startLocation,
-    zoom: 13,
-  });
+      // Initialize the map with the user's location
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: userLocation,
+        zoom: 13,
+      });
 
-  // Create a PlacesService instance
-  const service = new google.maps.places.PlacesService(map);
+      // Create the Places service
+      const service = new google.maps.places.PlacesService(map);
 
-  // Search for EV charging stations nearby
+      // Create a search box and link it to the input field
+      const input = document.getElementById("search-box");
+      autocomplete = new google.maps.places.Autocomplete(input);
+
+      // Bias the search results to the user's current location
+      autocomplete.setBounds(map.getBounds());
+
+      // Listen for when the user selects a place from the autocomplete suggestions
+      autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+          return;
+        }
+
+        // Center the map on the selected place and add a marker
+        map.setCenter(place.geometry.location);
+        map.setZoom(15); // Zoom in to the place
+
+        // Add a marker for the selected place
+        new google.maps.Marker({
+          position: place.geometry.location,
+          map: map,
+          title: place.name,
+        });
+
+        // Search for EV charging stations near the selected place
+        searchEVStations(place.geometry.location, service);
+      });
+
+      // Initially display EV stations around the user's location
+      searchEVStations(userLocation, service);
+
+
+      map.addListener("click", () => {
+        searchBox.style.display =
+          searchBox.style.display === "none" ? "block" : "none";
+      });
+
+
+      //Event listener for recentering the map
+      const recenterButton = document.getElementById("recenter-btn");
+      recenterButton.addEventListener("click", () => {
+        recenterMap(userLocation);
+      });
+
+
+    },
+    () => {
+      const defaultLocation = { lat: 43.65107, lng: -79.347015 }; // Toronto
+      initializeMap(defaultLocation);
+      alert("Using default location as geolocation is unavailable.");
+    }
+  );
+}
+
+
+
+// Function to recenter the map
+function recenterMap(location) {
+  map.setCenter(location);
+  map.setZoom(13);
+}
+
+// Function to search for EV charging stations around a given location
+function searchEVStations(location, service, r = 5) {
   const request = {
-    location: startLocation,
-    radius: 5000, // Search within 5km
+    location: location,
+    radius: r * 1000, // Search within r km
     keyword: "EV charging station",
   };
 
   service.nearbySearch(request, (results, status) => {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
+      // Clear existing markers
+      clearMarkers();
+
+      // Add a marker for each EV charging station
       results.forEach((place) => {
-        // Add a marker for each charging station
-        new google.maps.Marker({
+        const marker = new google.maps.Marker({
           position: place.geometry.location,
           map: map,
           title: place.name,
+        });
+
+        // Popup window
+        const infoWindow = new google.maps.InfoWindow({
+          content: `<div class="popup">
+            <h3>${place.name}</h3>
+            <p>${place.vicinity}</p>
+            <button id="report">Report Issue</button>
+          </div>`,
+        });
+
+        // Store the marker in the markers array
+        markers.push(marker);
+
+        marker.addListener("click", () => {
+          infoWindow.open(map, marker);
         });
       });
     } else {
@@ -36,4 +128,15 @@ function initMap() {
   });
 }
 
-//TODO: make the markers popups so that you can get the info and report, geolocation, search bar, change logos
+// Function to clear existing markers on the map
+function clearMarkers() {
+  // Remove each marker from the map and clear the array
+  markers.forEach((marker) => marker.setMap(null));
+  markers = [];
+}
+
+
+//TODO: change logos, call all ev stations, make it so that recenter button recenters to the correct, postion the recenter button
+
+
+//Questions: ev station logos, design, radius, size of the map
