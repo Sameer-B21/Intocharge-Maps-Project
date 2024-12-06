@@ -15,7 +15,7 @@ function initMap() {
       // Initialize the map with the user's location
       map = new google.maps.Map(document.getElementById("map"), {
         center: userLocation,
-        zoom: 13,
+        zoom: 15,
       });
 
       // Create the Places service
@@ -32,6 +32,11 @@ function initMap() {
       autocomplete.addListener("place_changed", () => {
         const place = autocomplete.getPlace();
 
+        //setting the recentre location to the searched location
+        userLocation = {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        };
         if (!place.geometry) {
           return;
         }
@@ -41,11 +46,11 @@ function initMap() {
         map.setZoom(15); // Zoom in to the place
 
         // Add a marker for the selected place
-        new google.maps.Marker({
-          position: place.geometry.location,
-          map: map,
-          title: place.name,
-        });
+        // new google.maps.Marker({
+        //   position: place.geometry.location,
+        //   map: map,
+        //   title: place.name,
+        // });
 
         // Search for EV charging stations near the selected place
         searchEVStations(place.geometry.location, service);
@@ -55,10 +60,11 @@ function initMap() {
       searchEVStations(userLocation, service);
 
 
-      map.addListener("click", () => {
-        searchBox.style.display =
-          searchBox.style.display === "none" ? "block" : "none";
-      });
+      // Hiding the search button
+      // map.addListener("click", () => {
+      //   searchBox.style.display =
+      //     searchBox.style.display === "none" ? "block" : "none";
+      // });
 
 
       //Event listener for recentering the map
@@ -69,8 +75,8 @@ function initMap() {
 
 
     },
-    () => {
-      const defaultLocation = { lat: 43.65107, lng: -79.347015 }; // Toronto
+    () => { //the case when geolocation is not available
+      const defaultLocation = { lat: 43.65107, lng: -79.347015 }; // Default Location: Toronto
       initializeMap(defaultLocation);
       alert("Using default location as geolocation is unavailable.");
     }
@@ -82,8 +88,9 @@ function initMap() {
 // Function to recenter the map
 function recenterMap(location) {
   map.setCenter(location);
-  map.setZoom(13);
+  map.setZoom(15);
 }
+
 
 // Function to search for EV charging stations around a given location
 function searchEVStations(location, service, r = 5) {
@@ -136,7 +143,7 @@ function clearMarkers() {
 }
 
 
-//TODO: change logos, call all ev stations, make it so that recenter button recenters to the correct, postion the recenter button
+//TODO: change logos, call all ev stations, postion the recenter button
 
 
-//Questions: ev station logos, design, radius, size of the map
+//Questions: ev station logos, design, radius, size of the map, where to recenter
