@@ -3,6 +3,8 @@ let autocomplete;
 let markers = [];  // Array to hold the markers
 let userLocation; // Store the user's location
 
+
+
 function initMap() {
   // Get the user's current position
   navigator.geolocation.getCurrentPosition(
@@ -100,6 +102,13 @@ function searchEVStations(location, service, r = 5) {
     keyword: "EV charging station",
   };
 
+  const customIcon = {
+    url: "./images/Pin.png", // URL to your custom image
+    scaledSize: new google.maps.Size(40, 40),  // Scales the image to desired dimensions
+    origin: new google.maps.Point(0, 0),      // Origin of the image (top-left corner)
+    anchor: new google.maps.Point(20, 40),    // Position to anchor the marker on the map
+  };
+
   service.nearbySearch(request, (results, status) => {
     if (status === google.maps.places.PlacesServiceStatus.OK) {
       // Clear existing markers
@@ -111,6 +120,7 @@ function searchEVStations(location, service, r = 5) {
           position: place.geometry.location,
           map: map,
           title: place.name,
+          icon: customIcon, // Set the custom icon
         });
 
         // Popup window
@@ -143,7 +153,7 @@ function clearMarkers() {
 }
 
 
-//TODO: change logos, call all ev stations, postion the recenter button
+//TODO: call all ev stations, postion the recenter button, make the map into grid (like uber maps), design the site like the company site
 
 
-//Questions: ev station logos, design, radius, size of the map, where to recenter
+//Questions: design, radius, size of the map, where to recenter
