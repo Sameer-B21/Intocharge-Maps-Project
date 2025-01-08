@@ -24,22 +24,40 @@ function initMap() {
           {
             // Sets the base color for all map features like land, water, and roads.
             "elementType": "geometry",
-            "stylers": [{ "color": "#aaaaaa" }] // Medium gray base color for the map background.
+            "stylers": [{ "color": "#E8E8E8" }] // light gray base color for the map background.
           },
           {
             // Controls the visibility of icons like place markers (e.g., restaurants, businesses).
             "elementType": "labels.icon",
-            "stylers": [{ "visibility": "off" }] // Hides all icons on the map for a cleaner appearance.
+            "stylers": [{ "visibility": "off" }, { "color": "#aaaaaa" }] // Hides all icons on the map for a cleaner appearance.
           },
           {
             // Sets the color for text labels, such as road names and place names.
             "elementType": "labels.text.fill",
-            "stylers": [{ "color": "#555555" }] // Light gray text color for a subtle appearance.
+            "stylers": [{ "color": "#757575" }] // gray text color for a subtle appearance.
+          },
+          {
+            // Sets the color for text labels, such as country names.
+            "featureType": "administrative.country",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              { "color": "#000000" }, // Black color for country names
+              { "weight": 3 }         // Bold effect by increasing weight
+            ]
+          },
+          //province labels
+          {
+            "featureType": "administrative.province",
+            "elementType": "labels.text.fill",
+            "stylers": [
+              { "color": "#757575" }, // Gray color for province/state names
+              { "weight": 1 }         // Normal weight for text
+            ]
           },
           {
             // Defines the stroke color around text labels (outlines of letters).
             "elementType": "labels.text.stroke",
-            "stylers": [{ "color": "#aaaaaa" }] // Light gray stroke to minimize boldness and blend with the map background.
+            "stylers": [{ "weight": 0 }] // Light gray stroke to minimize boldness and blend with the map background.
           },
           {
             // Controls the appearance of administrative boundaries (e.g., country, state borders).
@@ -51,25 +69,30 @@ function initMap() {
             // Specifies the appearance of standard roads (non-highways).
             "featureType": "road",
             "elementType": "geometry.fill",
-            "stylers": [{ "color": "#757575" }] // Dark gray for roads to make them stand out against the base background.
+            "stylers": [{ "color": "#D3D3D3" }] // A bit darker than #E8E8E8 for roads to make them stand out against the base background.
           },
-          {
-            // Defines the appearance of highways specifically.
-            "featureType": "road.highway",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#757575" }] // Slightly lighter gray for highways to distinguish them from regular roads.
-          },
+          // {
+          //   // Defines the appearance of highways specifically.
+          //   "featureType": "road.highway",
+          //   "elementType": "geometry",
+          //   "stylers": [{ "color": "#D3D3D3" }] // Slightly lighter gray for highways to distinguish them from regular roads.
+          // },
           {
             // Specifies the appearance of water bodies like lakes, rivers, and oceans.
             "featureType": "water",
             "elementType": "geometry",
-            "stylers": [{ "color": "#ADD8E6" }] // Light blue color to mimic natural water tones.
+            "stylers": [{ "color": "#D3D3D3" }] // A bit darker than #E8E8E8. PERFECT
           },
+          // {
+          //   // Customizes the appearance of natural features like parks and forests.
+          //   "featureType": "poi.park",
+          //   "elementType": "geometry",
+          //   "stylers": [{ "color": "#E8E8E8" }] // light gray to represent parks and forests clearly.
+          // }
           {
-            // Customizes the appearance of natural features like parks and forests.
-            "featureType": "poi.park",
-            "elementType": "geometry",
-            "stylers": [{ "color": "#228B22" }] // Forest green to represent parks and forests clearly.
+            "featureType": "administrative.land_parcel",
+            "elementType": "geometry.fill",
+            "stylers": [{ "visibility": "off" }]
           }
         ],
       });
